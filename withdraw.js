@@ -3,7 +3,6 @@ function Withdraw() {
     const [status, setStatus] = React.useState("");
     const ctx = React.useContext(UserContext);
     const [balance, setBalance] = React.useState(ctx.users[0].balance);
-    const [movements, setMovements] = React.useState([]);
   
     return (
       <Card
@@ -31,7 +30,6 @@ function Withdraw() {
         setBalance(balance - withdraw);
         ctx.users[0].balance = balance - Number(withdraw);
         ctx.users[0].movements.push({
-          date: getDate(),
           type: "withdraw",
           amount: withdraw,
         });
@@ -69,48 +67,17 @@ function Withdraw() {
       );
     }
   
-    function WithdrawMessage(props) {
-      return (
-        <>
-          <span className="balance-information">Account Balance ${balance}</span>
-          <br />
-          <br />
-          <h5>Successful Withdrawl</h5>
-          <button
-            type="submit"
-            className="btn btn-light"
-            onClick={() => props.setShow(true)}
-          >
-            Withdraw Again
-          </button>
-        </>
-      );
-    }
-  
-    function getDate() {
-      let today = new Date();
-      const dd = String(today.getDate()).padStart(2, "0");
-      const mm = String(today.getMonth() + 1).padStart(2, "0");
-      const yyyy = today.getFullYear();
-  
-      today = mm + "/" + dd + "/" + yyyy;
-      return today;
-    }
-  
     function validate(withdraw, balance) {
       if (isNaN(withdraw)) {
-        setStatus("Error: did not enter a valid number");
-        setTimeout(() => setStatus(""), 3000);
+        setStatus("Please enter a valid number");
         return false;
       }
       if (withdraw > balance) {
-        setStatus("Error: Insuffienct funds");
-        setTimeout(() => setStatus(""), 3000);
+        setStatus("Transaction failed: Insuffienct funds");
         return false;
       }
       if (withdraw < 1) {
-        setStatus("Error: Lowest withdrawl amount is $1");
-        setTimeout(() => setStatus(""), 3000);
+        setStatus("Withdrawl amount cannot be a negative number");
         return false;
       }
       newFunction();
